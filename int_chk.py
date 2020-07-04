@@ -32,12 +32,26 @@ se_main_collist = [[row[i] for row in se_main_rowlist] for i in range(ncol_main)
 
 import zipfile
 
-cord_gjf_zip = zipfile.ZipFile("./data/static/ROUND3_TOFREQ_v2.zip", "r")
-cord_gjf_namelist = []
-for filename in cord_gjf_zip.namelist():
-    if filename.endswith('.gjf'):
-        cord_gjf_namelist.append(filename[17:-4])
-    #print(filename[17:-4])
+def ReadFromGjfZip():
+    cord_gjf_zip = zipfile.ZipFile("./data/static/ROUND3_TOFREQ_v2.zip", "r")
+    cord_gjf_namelist = []
+    for filename in cord_gjf_zip.namelist():
+        if filename.endswith('.gjf'):
+            cord_gjf_namelist.append(filename[17:-4])
+        # print(filename[17:-4])
+    return cord_gjf_namelist
+
+def ReadFromMol2Zip():
+    cord_gjf_zip = zipfile.ZipFile("./data/static/20200703_RE.zip", "r")
+    cord_gjf_namelist = []
+    for filename in cord_gjf_zip.namelist():
+        if filename.endswith('.mol2'):
+            cord_gjf_namelist.append(filename[12:-5])
+            # print(filename[12:-5])
+    return cord_gjf_namelist
+
+cord_gjf_namelist = ReadFromMol2Zip()
+# cord_gjf_namelist = ReadFromGjfZip()
 
 for item in se_main_collist[1]:
     if item not in cord_gjf_namelist:
