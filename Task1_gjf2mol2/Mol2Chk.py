@@ -92,7 +92,7 @@ def rewrite(file_str_list,ATOM_sign_line,detail_list):
     out_text += '\n@<TRIPOS>BOND\n'
     out_text += '\n'.join(['\t\t'.join(item) for item in detail_list[2]])
     out_text += '\n'
-    f_out = open('../data/temp/good_mol2_v2/'+detail_list[0][12:-5]+'.mol2','a')
+    f_out = open('../data/temp/good_mol2_v3/'+detail_list[0][12:-5]+'.mol2','a')
     print(out_text, file=f_out)
     f_out.close()
     # input()
@@ -125,6 +125,13 @@ for filename in cord_mol2_namelist:
     non_ar_carbon = [atom_info[0] for atom_info in detail_list[1] if atom_info[1] == 'C' and atom_info[5] != 'C.ar']
     abnormal_carbon = [atom_no for atom_no in non_ar_carbon
                        if sum([int(bond_info[3]) for bond_info in detail_list[2] if atom_no in bond_info[1:3] and bond_info[3].isdigit()]) != 4]
+    '''
+    for atom_info in detail_list[1]:
+        atom_bond = 0
+        for bond_info in detail_list[2]:
+            pass
+    '''
+
 
     if abnormal_carbon and len(abnormal_carbon)!=2:
         print(detail_list[0]+' different than 2 abnormal carbon!')
@@ -133,7 +140,8 @@ for filename in cord_mol2_namelist:
     ### FIND 6 RING
 
     six_ring_list = find_6_member_ring(detail_list)
-
+    if 'JKJ-2019-EJMC-11-4v' in detail_list[0]:
+        print(abnormal_carbon,six_ring_list)
 
     ### SWITCH SINGLE BOND AND DOUBLE BOND
     ### NOT ENOUGH
@@ -148,7 +156,7 @@ for filename in cord_mol2_namelist:
 
     sign_1 = False
     for ring_set in six_ring_list:
-        if not sign_1 and ring_set > set(abnormal_carbon):
+        if not sign_1 and abnormal_carbon and ring_set > set(abnormal_carbon):
             sign_1 = True
             for atom_no in ring_set:
                 for atom_info in detail_list[1]:
@@ -157,11 +165,13 @@ for filename in cord_mol2_namelist:
                 for bond_info in detail_list[2]:
                     if set(bond_info[1:3]) < ring_set:
                         bond_info[3] = 'ar'
-    if not sign_1:
+    if not sign_1 and abnormal_carbon:
         print(detail_list[0]+' abnormal not in 6 ring!')
 
 
     ### WRITE OUTPUT
+
+
     rewrite(file_str_list, ATOM_sign_line, detail_list)
 
 
