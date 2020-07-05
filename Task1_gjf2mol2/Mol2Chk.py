@@ -7,6 +7,7 @@ for filename in cord_mol2_zip.namelist():
         cord_mol2_namelist.append(filename)
 
 def find_sign_lines(file_str_list):
+    #print(file_str_list)
     ATOM_sign_line = file_str_list.index('@<TRIPOS>ATOM')
     BOND_sign_line = file_str_list.index('@<TRIPOS>BOND')
     return ATOM_sign_line, BOND_sign_line
@@ -83,13 +84,15 @@ def find_6_member_ring(detail_list):
 
 
 def rewrite(file_str_list,ATOM_sign_line,detail_list):
-    out_text = '\n'.join(file_str_list[:ATOM_sign_line])
+    out_text = '@<TRIPOS>MOLECULE\n'
+    out_text += detail_list[0][12:-5]+'\n'
+    out_text += '\n'.join(file_str_list[2:ATOM_sign_line])
     out_text += '\n@<TRIPOS>ATOM\n'
     out_text += '\n'.join(['\t\t'.join(item) for item in detail_list[1]])
     out_text += '\n@<TRIPOS>BOND\n'
     out_text += '\n'.join(['\t\t'.join(item) for item in detail_list[2]])
     out_text += '\n'
-    f_out = open('../data/temp/good_mol2/'+detail_list[0][12:-5]+'.mol2','a')
+    f_out = open('../data/temp/good_mol2_v2/'+detail_list[0][12:-5]+'.mol2','a')
     print(out_text, file=f_out)
     f_out.close()
     # input()
@@ -100,6 +103,8 @@ def rewrite(file_str_list,ATOM_sign_line,detail_list):
 for filename in cord_mol2_namelist:
     source_mol2 = cord_mol2_zip.read(filename)
     file_str_list = source_mol2.decode().split('\n')
+    # file_str_list = source_mol2.decode().split('\r\n')
+    # print(file_str_list)
     # input(len(source_mol2.decode().split('\n')))
     ATOM_sign_line, BOND_sign_line = find_sign_lines(file_str_list)
 
@@ -157,6 +162,6 @@ for filename in cord_mol2_namelist:
 
 
     ### WRITE OUTPUT
-    # rewrite(file_str_list, ATOM_sign_line, detail_list)
+    rewrite(file_str_list, ATOM_sign_line, detail_list)
 
 
