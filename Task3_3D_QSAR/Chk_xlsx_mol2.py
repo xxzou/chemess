@@ -4,8 +4,9 @@ import os
 wb_main = xlrd.open_workbook('../data/static/所有数据_20200709.xlsx')
 print('###this xlsx file contain sheets:###')
 print(wb_main.sheet_names())
+input()
 
-se_main = wb_main.sheet_by_name('20200707')
+se_main = wb_main.sheet_by_name('20200708(pIC+uM)')
 nrow_main, ncol_main = se_main.nrows, se_main.ncols
 # print(nrow_main, ncol_main)
 
