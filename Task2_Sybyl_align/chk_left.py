@@ -1,6 +1,6 @@
 import os
 
-all = os.listdir('../data/temp/good_mol2_v2.mdb')
+all = os.listdir('../data/temp/good_mol2_v3.mdb')
 
 subset_folder = os.listdir('../data/temp/subset')
 
